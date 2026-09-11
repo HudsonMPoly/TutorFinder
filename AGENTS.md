@@ -19,7 +19,7 @@ After STOP 1, help the student propose and approve the six TARGET lines and one 
 
 ## My standing rule
 
-[One observable, student-approved rule that protects this project's purpose or experience.]
+Every supported engineering course must display at least three verified free learning resources, including at least one structured website and one video-based resource. Clearly label each resource type and never invent a recommendation or describe a paid-only resource as free.
 
 ## Workflow
 
