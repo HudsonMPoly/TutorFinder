@@ -1,24 +1,576 @@
-<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>My next idea · The Understudy</title>
-<style>*{box-sizing:border-box}body{margin:0;background:#f5f2e9;color:#20281f;font:18px/1.55 system-ui,sans-serif}main{max-width:1120px;margin:auto;padding:40px 6vw}header{display:flex;justify-content:space-between;border-bottom:1px solid #b8bcae;padding-bottom:22px;font-size:13px;letter-spacing:.12em;text-transform:uppercase}.stage{display:grid;grid-template-columns:1.5fr 1fr;gap:7vw;align-items:center;min-height:65vh}h1{font-family:Georgia,serif;font-weight:400;font-size:clamp(60px,8vw,112px);letter-spacing:-.06em;line-height:.96;margin:40px 0 25px}p{max-width:530px}.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase}.mark{height:280px;position:relative;display:grid;place-items:center}.mark span{position:absolute;width:160px;height:220px;border:2px solid #42613b;transform:rotate(var(--r));transition:transform .5s}.mark span:nth-child(1){--r:-25deg}.mark span:nth-child(2){--r:0deg;background:#dbe4be}.mark span:nth-child(3){--r:25deg}.mark:hover span{transform:rotate(calc(var(--r) * 1.3))}a{color:inherit;text-underline-offset:5px}.links{display:flex;flex-wrap:wrap;gap:24px;padding:25px 0}.primary{background:#263d24;color:#fff;padding:12px 20px;text-decoration:none}footer{border-top:1px solid #b8bcae;padding-top:24px;font-size:14px}a:focus-visible{outline:3px solid #a54919;outline-offset:5px}@media(max-width:650px){.stage{display:block;min-height:0}.mark{height:170px;margin:30px 0}.mark span{width:100px;height:140px}header{gap:20px}main{padding:25px 7vw}}@media(prefers-reduced-motion:reduce){.mark span{transition:none}.mark:hover span{transform:rotate(var(--r))}}.live{border-top:1px solid #b8bcae;padding:22px 0 4px;display:flex;flex-wrap:wrap;gap:14px;align-items:center}.live code{flex:1 1 300px;min-width:0;background:#fff;border:1px solid #b8bcae;padding:11px 13px;font-size:14px;overflow-wrap:anywhere}.live button{min-height:44px;padding:11px 18px;font:inherit;font-weight:600;color:#fff;background:#263d24;border:0;cursor:pointer}.live button:focus-visible{outline:3px solid #a54919;outline-offset:5px}.live small{flex-basis:100%;font-size:14px;color:#4a5247}</style>
-<main><header><b>CPVC / The Understudy</b><span>Session 02 · Starter</span></header><section class="stage"><div><h1>A small site.<br>A real beginning.</h1><p>This is my working starter. My own one-page site and one useful interaction come next.</p><p class="eyebrow">Published first. Made mine next.</p></div><div class="mark" aria-hidden="true"><span></span><span></span><span></span></div></section><div class="live"><code id="liveurl">Open this page over http:// or https:// to see its address.</code><button id="copy" type="button">Copy link</button><small id="copyhint">This is the address you submit. Not your GitHub repository address.</small></div><div class="links"><a class="primary" href="https://calpolyvibecoding.com/portal">Submit my live URL ↗</a><a id="guide" href="https://github.com/calpolyvibecoding-01/cpvc-02-understudy-template#readme">Follow the build guide →</a><a href="examples/coast/">See the coastal example →</a></div><footer>Deploy this untouched starter, open the actual live URL, then confirm your portal submission. <strong>STOP 1:</strong> only then brief the agent and build your own idea. Keep the same root URL as your site grows.</footer></main>
-<script>
-(function(){
-  var box=document.getElementById('liveurl'),btn=document.getElementById('copy'),
-      hint=document.getElementById('copyhint'),guide=document.getElementById('guide');
-  var web=location.protocol==='http:'||location.protocol==='https:';
-  var url=web?location.origin+location.pathname:'';
-  if(web){box.textContent=url;}else{btn.hidden=true;hint.textContent='You are viewing this file directly. Publish it with GitHub Pages to get a real address.';}
-  var host=location.hostname.match(/^([a-z0-9-]+)\.github\.io$/i),
-      repo=location.pathname.split('/').filter(Boolean)[0];
-  if(host&&repo){guide.href='https://github.com/'+host[1]+'/'+repo+'#readme';}
-  btn.addEventListener('click',function(){
-    function pick(){var r=document.createRange();r.selectNodeContents(box);
-      var s=window.getSelection();s.removeAllRanges();s.addRange(r);
-      hint.textContent='Link selected. Press Ctrl+C or Cmd+C to copy it.';}
-    if(navigator.clipboard&&navigator.clipboard.writeText){
-      navigator.clipboard.writeText(url).then(function(){hint.textContent='Copied. Paste it into the Link field in the portal.';},pick);
-    }else{pick();}
-  });
-})();
-</script>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Find free, college-level learning resources for common engineering courses.">
+  <title>OpenBench · Engineering Course Finder</title>
+  <style>
+    :root {
+      --ink: #ecf7f4;
+      --muted: #9fb6b3;
+      --paper: #081412;
+      --panel: rgba(12, 31, 28, .78);
+      --panel-solid: #102724;
+      --line: rgba(174, 233, 218, .22);
+      --accent: #70f0c8;
+      --accent-2: #f4c56a;
+      --glow: rgba(112, 240, 200, .16);
+      --grid: rgba(112, 240, 200, .07);
+      --shadow: 0 24px 70px rgba(0, 0, 0, .35);
+      color-scheme: dark;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--paper);
+      color: var(--ink);
+      font: 16px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      transition: background-color .45s ease, color .45s ease;
+    }
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      pointer-events: none;
+    }
+    body::before {
+      background:
+        radial-gradient(circle at 82% 16%, var(--glow), transparent 31rem),
+        radial-gradient(circle at 7% 82%, rgba(244, 197, 106, .07), transparent 28rem),
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: auto, auto, 32px 32px, 32px 32px;
+      mask-image: linear-gradient(to bottom, #000 0%, rgba(0,0,0,.75) 70%, transparent 100%);
+    }
+    body::after {
+      z-index: -1;
+      opacity: .36;
+      background-repeat: no-repeat;
+      background-position: calc(100% - 4vw) 7.5rem;
+      background-size: min(34vw, 430px);
+      transition: opacity .35s ease;
+    }
+
+    body[data-theme="math"] {
+      --paper: #101027; --panel: rgba(24, 24, 57, .82); --panel-solid: #20204b;
+      --line: rgba(188, 183, 255, .25); --accent: #b9b1ff; --accent-2: #ffcb6b;
+      --glow: rgba(134, 117, 255, .22); --grid: rgba(185, 177, 255, .07);
+    }
+    body[data-theme="math"]::after {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 420 420'%3E%3Cg fill='none' stroke='%23b9b1ff' stroke-width='2'%3E%3Cpath d='M25 340h360M58 380V38M58 289c62-1 87-8 117-36 46-43 47-128 105-170 29-21 62-25 102-25'/%3E%3Ccircle cx='175' cy='253' r='7' fill='%23b9b1ff'/%3E%3Cpath d='M92 94h77m-39-38v76M279 262l45 78m0-78-45 78'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    body[data-theme="physics"] {
+      --paper: #071a27; --panel: rgba(8, 35, 52, .82); --panel-solid: #0b3048;
+      --line: rgba(121, 211, 255, .25); --accent: #7bd7ff; --accent-2: #ffb36b;
+      --glow: rgba(68, 181, 239, .22); --grid: rgba(123, 215, 255, .07);
+    }
+    body[data-theme="physics"]::after {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 420 420'%3E%3Cg fill='none' stroke='%237bd7ff' stroke-width='2'%3E%3Cellipse cx='210' cy='210' rx='175' ry='63' transform='rotate(28 210 210)'/%3E%3Cellipse cx='210' cy='210' rx='175' ry='63' transform='rotate(-28 210 210)'/%3E%3Cellipse cx='210' cy='210' rx='175' ry='63' transform='rotate(90 210 210)'/%3E%3Ccircle cx='210' cy='210' r='17' fill='%237bd7ff'/%3E%3Ccircle cx='354' cy='310' r='7' fill='%23ffb36b'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    body[data-theme="code"] {
+      --paper: #071814; --panel: rgba(8, 37, 29, .82); --panel-solid: #0b3026;
+      --line: rgba(117, 245, 184, .24); --accent: #72f3b6; --accent-2: #f4d35e;
+      --glow: rgba(75, 221, 155, .19); --grid: rgba(114, 243, 182, .065);
+    }
+    body[data-theme="code"]::after {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 420 420'%3E%3Cg fill='none' stroke='%2372f3b6' stroke-width='9' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M153 116 60 210l93 94M267 116l93 94-93 94M235 76l-50 268'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    body[data-theme="structures"] {
+      --paper: #19120c; --panel: rgba(45, 31, 19, .84); --panel-solid: #382719;
+      --line: rgba(249, 190, 112, .25); --accent: #f8bd70; --accent-2: #9ad9cc;
+      --glow: rgba(236, 152, 61, .19); --grid: rgba(248, 189, 112, .065);
+    }
+    body[data-theme="structures"]::after {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 420 420'%3E%3Cg fill='none' stroke='%23f8bd70' stroke-width='3'%3E%3Cpath d='M30 335h360L210 78 30 335Zm0 0 90-128 90 128 90-128 90 128M120 207h180M210 78v257'/%3E%3Ccircle cx='30' cy='335' r='8' fill='%23f8bd70'/%3E%3Ccircle cx='210' cy='335' r='8' fill='%23f8bd70'/%3E%3Ccircle cx='390' cy='335' r='8' fill='%23f8bd70'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    body[data-theme="circuits"] {
+      --paper: #15101e; --panel: rgba(36, 24, 49, .84); --panel-solid: #30203f;
+      --line: rgba(236, 159, 255, .24); --accent: #eaa2ff; --accent-2: #79e8d0;
+      --glow: rgba(209, 104, 239, .18); --grid: rgba(234, 162, 255, .06);
+    }
+    body[data-theme="circuits"]::after {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 420 420'%3E%3Cg fill='none' stroke='%23eaa2ff' stroke-width='3'%3E%3Cpath d='M45 80h110v62h110v-36h110M45 210h75l18-28 34 56 34-56 34 56 18-28h117M45 340h90v-56h150v56h90'/%3E%3Cg fill='%23eaa2ff'%3E%3Ccircle cx='45' cy='80' r='8'/%3E%3Ccircle cx='375' cy='106' r='8'/%3E%3Ccircle cx='45' cy='210' r='8'/%3E%3Ccircle cx='375' cy='210' r='8'/%3E%3Ccircle cx='45' cy='340' r='8'/%3E%3Ccircle cx='375' cy='340' r='8'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    body[data-theme="energy"] {
+      --paper: #201007; --panel: rgba(49, 28, 15, .84); --panel-solid: #3d2617;
+      --line: rgba(255, 174, 92, .25); --accent: #ffad5d; --accent-2: #80ded9;
+      --glow: rgba(255, 126, 45, .2); --grid: rgba(255, 173, 93, .06);
+    }
+    body[data-theme="energy"]::after {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 420 420'%3E%3Cg fill='none' stroke='%23ffad5d' stroke-width='4' stroke-linecap='round'%3E%3Cpath d='M210 60c-61 63 31 82-30 143-54 54-47 145 30 164 77-19 84-110 30-164-61-61 31-80-30-143Z'/%3E%3Cpath d='M210 180c-12 44 36 57 0 121-36-64 12-77 0-121Z' fill='%23ffad5d'/%3E%3Cpath d='M72 110c38 20 38 50 0 70M348 110c-38 20-38 50 0 70'/%3E%3C/g%3E%3C/svg%3E");
+    }
+    body[data-theme="fluids"] {
+      --paper: #061a1f; --panel: rgba(8, 38, 44, .84); --panel-solid: #0a3037;
+      --line: rgba(113, 224, 232, .24); --accent: #6fdee7; --accent-2: #ffd166;
+      --glow: rgba(55, 199, 210, .18); --grid: rgba(111, 222, 231, .06);
+    }
+    body[data-theme="fluids"]::after {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 420 420'%3E%3Cg fill='none' stroke='%236fdee7' stroke-width='3'%3E%3Cpath d='M36 105c52-38 92 38 144 0s92 38 144 0 60 0 60 0M36 190c52-38 92 38 144 0s92 38 144 0 60 0 60 0M36 275c52-38 92 38 144 0s92 38 144 0 60 0 60 0'/%3E%3Cpath d='M210 38c-19 39-62 87-62 137a62 62 0 0 0 124 0c0-50-43-98-62-137Z' fill='%236fdee7' fill-opacity='.16'/%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    a { color: inherit; }
+    a:focus-visible, button:focus-visible, input:focus-visible {
+      outline: 3px solid var(--accent-2);
+      outline-offset: 4px;
+    }
+    .shell { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+    .site-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 26px 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 780; letter-spacing: -.02em; }
+    .brand-mark {
+      display: grid; place-items: center; width: 38px; height: 38px;
+      border: 1px solid var(--accent); color: var(--accent); border-radius: 10px;
+      font: 700 13px/1 ui-monospace, monospace; transform: rotate(-4deg);
+    }
+    .header-note { color: var(--muted); font-size: .82rem; text-transform: uppercase; letter-spacing: .14em; }
+    .hero { padding: clamp(68px, 10vw, 122px) 0 34px; max-width: 900px; }
+    .eyebrow { margin: 0 0 18px; color: var(--accent); font: 700 .76rem/1.3 ui-monospace, monospace; letter-spacing: .18em; text-transform: uppercase; }
+    h1 { margin: 0; max-width: 820px; font-size: clamp(3rem, 8vw, 6.9rem); line-height: .91; letter-spacing: -.075em; font-weight: 760; }
+    h1 em { color: var(--accent); font-style: normal; }
+    .lede { max-width: 650px; margin: 28px 0 0; color: var(--muted); font-size: clamp(1.04rem, 2vw, 1.25rem); }
+
+    .finder {
+      position: relative;
+      margin: 26px 0 70px;
+      padding: clamp(20px, 4vw, 38px);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+    .finder label { display: block; margin-bottom: 10px; color: var(--muted); font-size: .88rem; font-weight: 700; letter-spacing: .05em; }
+    .search-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; }
+    .search-row input {
+      width: 100%; min-width: 0; min-height: 58px; padding: 0 18px;
+      border: 1px solid var(--line); border-radius: 13px;
+      background: rgba(0,0,0,.2); color: var(--ink); font: inherit; font-size: 1.05rem;
+    }
+    .search-row input::placeholder { color: color-mix(in srgb, var(--muted) 80%, transparent); }
+    .search-row button {
+      min-height: 58px; padding: 0 25px; border: 0; border-radius: 13px;
+      background: var(--accent); color: #071411; font: 800 .96rem/1 inherit; cursor: pointer;
+      transition: transform .2s ease, filter .2s ease;
+    }
+    .search-row button:hover { filter: brightness(1.08); transform: translateY(-2px); }
+    .examples { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; margin-top: 16px; }
+    .examples span { color: var(--muted); font-size: .8rem; }
+    .chip {
+      padding: 7px 11px; border: 1px solid var(--line); border-radius: 999px;
+      background: transparent; color: var(--ink); font: 650 .8rem/1 inherit; cursor: pointer;
+    }
+    .chip:hover { border-color: var(--accent); color: var(--accent); }
+    .status { min-height: 24px; margin: 16px 0 0; color: var(--muted); font-size: .9rem; }
+
+    .results { display: none; padding-bottom: 72px; }
+    .results.visible { display: block; animation: reveal .45s ease both; }
+    .result-head { display: grid; grid-template-columns: 1fr auto; gap: 30px; align-items: end; margin-bottom: 26px; }
+    .result-kicker { margin: 0 0 7px; color: var(--accent); font: 700 .72rem/1 ui-monospace, monospace; text-transform: uppercase; letter-spacing: .15em; }
+    h2 { margin: 0; font-size: clamp(2rem, 5vw, 4rem); line-height: 1; letter-spacing: -.045em; }
+    .result-meta { margin: 11px 0 0; color: var(--muted); }
+    .theme-tag { padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--accent); font-size: .78rem; white-space: nowrap; }
+    .resource-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .resource-card {
+      display: flex; flex-direction: column; min-height: 245px; padding: 22px;
+      border: 1px solid var(--line); border-radius: 17px; background: var(--panel);
+      text-decoration: none; box-shadow: 0 12px 35px rgba(0,0,0,.18);
+      transition: transform .22s ease, border-color .22s ease, background .22s ease;
+    }
+    .resource-card:hover { transform: translateY(-5px); border-color: var(--accent); background: var(--panel-solid); }
+    .card-top { display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+    .kind { color: var(--accent); font: 700 .7rem/1 ui-monospace, monospace; text-transform: uppercase; letter-spacing: .13em; }
+    .out { color: var(--muted); font-size: 1.15rem; }
+    .resource-card h3 { margin: 32px 0 8px; font-size: 1.28rem; line-height: 1.15; letter-spacing: -.02em; }
+    .resource-card p { margin: 0; color: var(--muted); font-size: .9rem; }
+    .source { margin-top: auto; padding-top: 24px; color: var(--ink); font-size: .8rem; font-weight: 700; }
+
+    .empty {
+      display: none; margin-bottom: 72px; padding: clamp(24px, 5vw, 44px);
+      border: 1px dashed var(--line); border-radius: 22px; background: var(--panel);
+    }
+    .empty.visible { display: block; }
+    .empty h2 { font-size: clamp(1.8rem, 4vw, 3.1rem); }
+    .empty p { max-width: 670px; color: var(--muted); }
+    .course-list { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 24px; }
+    .course-button { padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; background: transparent; color: var(--ink); cursor: pointer; font: 650 .82rem/1.2 inherit; }
+    .course-button:hover { color: var(--accent); border-color: var(--accent); }
+
+    .how { display: grid; grid-template-columns: .7fr 1.3fr; gap: clamp(30px, 8vw, 100px); padding: 14px 0 84px; }
+    .how h2 { font-size: clamp(2rem, 4vw, 3.4rem); }
+    .steps { border-top: 1px solid var(--line); }
+    .step { display: grid; grid-template-columns: 40px 1fr; gap: 16px; padding: 20px 0; border-bottom: 1px solid var(--line); }
+    .step b { color: var(--accent); font-family: ui-monospace, monospace; }
+    .step p { margin: 0; color: var(--muted); }
+    .site-footer { display: flex; justify-content: space-between; gap: 30px; padding: 25px 0 42px; border-top: 1px solid var(--line); color: var(--muted); font-size: .8rem; }
+    .site-footer a { text-underline-offset: 4px; }
+
+    @keyframes reveal { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+    @media (max-width: 820px) {
+      body::after { opacity: .2; background-size: 60vw; }
+      .resource-grid { grid-template-columns: 1fr; }
+      .resource-card { min-height: 200px; }
+      .how { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 580px) {
+      .shell { width: min(100% - 26px, 1180px); }
+      .site-header { padding: 18px 0; }
+      .header-note { display: none; }
+      .hero { padding-top: 62px; }
+      .search-row { grid-template-columns: 1fr; }
+      .result-head { grid-template-columns: 1fr; gap: 12px; }
+      .theme-tag { justify-self: start; }
+      .site-footer { flex-direction: column; gap: 10px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body data-theme="default">
+  <div class="shell">
+    <header class="site-header">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">OB</span><span>OpenBench</span></div>
+      <span class="header-note">Free engineering study paths</span>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <p class="eyebrow">Built for the class you're in</p>
+        <h1 id="page-title">Find your course.<br><em>Build your edge.</em></h1>
+        <p class="lede">Type an engineering course and get a focused set of free, college-level notes, practice, and video instruction—without the resource rabbit hole.</p>
+      </section>
+
+      <section class="finder" aria-label="Course finder">
+        <form id="course-form" novalidate>
+          <label for="course-input">What course are you working through?</label>
+          <div class="search-row">
+            <input id="course-input" name="course" type="search" list="course-options" autocomplete="off" placeholder="Try Statics, Calc 2, Circuits…" aria-describedby="search-status">
+            <button type="submit">Find resources</button>
+          </div>
+          <datalist id="course-options"></datalist>
+        </form>
+        <div class="examples" aria-label="Example searches">
+          <span>Quick try:</span>
+          <button class="chip" type="button" data-query="Statics">Statics</button>
+          <button class="chip" type="button" data-query="Calc 2">Calc 2</button>
+          <button class="chip" type="button" data-query="Circuits">Circuits</button>
+          <button class="chip" type="button" data-query="Thermodynamics">Thermodynamics</button>
+        </div>
+        <p class="status" id="search-status" role="status" aria-live="polite">17 common engineering courses supported.</p>
+      </section>
+
+      <section class="results" id="results" aria-labelledby="result-title">
+        <div class="result-head">
+          <div>
+            <p class="result-kicker">Recommended study path</p>
+            <h2 id="result-title"></h2>
+            <p class="result-meta" id="result-meta"></p>
+          </div>
+          <span class="theme-tag" id="theme-tag"></span>
+        </div>
+        <div class="resource-grid" id="resource-grid"></div>
+      </section>
+
+      <section class="empty" id="empty" aria-labelledby="empty-title">
+        <p class="result-kicker">No exact match yet</p>
+        <h2 id="empty-title">Try a supported engineering course.</h2>
+        <p id="empty-message"></p>
+        <div class="course-list" id="course-list" aria-label="Supported courses"></div>
+      </section>
+
+      <section class="how" aria-labelledby="how-title">
+        <div><p class="eyebrow">Less searching, more learning</p><h2 id="how-title">Three useful ways in.</h2></div>
+        <div class="steps">
+          <div class="step"><b>01</b><p><strong>Structured reference</strong><br>Read concepts in sequence and revisit worked examples.</p></div>
+          <div class="step"><b>02</b><p><strong>Practice or open course</strong><br>Work problems and connect them to college-level instruction.</p></div>
+          <div class="step"><b>03</b><p><strong>Video instruction</strong><br>See a second explanation when the textbook version does not click.</p></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>OpenBench · A curated starting point, not a replacement for your course materials.</span>
+      <span>All listed resources are free to access · <a href="examples/coast/">Original example</a></span>
+    </footer>
+  </div>
+
+  <script>
+  (function () {
+    'use strict';
+    var courses = [
+      {
+        name: 'Calculus I', theme: 'math', field: 'Mathematics · Foundations',
+        aliases: ['calculus 1', 'calc 1', 'calc i', 'differential calculus', 'math 141', 'math 2413'],
+        resources: [
+          ['Structured notes', "Paul's Online Math Notes", 'Limits, derivatives, applications, and integration with worked examples and practice.', 'Lamar University', 'https://tutorial.math.lamar.edu/Classes/CalcI/CalcI.aspx'],
+          ['Open course + video', 'MIT Single Variable Calculus', 'Full undergraduate course with lecture videos, notes, problem sets, and solutions.', 'MIT OpenCourseWare', 'https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/'],
+          ['YouTube series', 'Essence of Calculus', 'A visual companion for derivatives, integrals, limits, and the fundamental theorem.', '3Blue1Brown', 'https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr']
+        ]
+      },
+      {
+        name: 'Calculus II', theme: 'math', field: 'Mathematics · Integration & series',
+        aliases: ['calculus 2', 'calc 2', 'calc ii', 'integral calculus', 'math 142', 'math 2414'],
+        resources: [
+          ['Structured notes', "Paul's Calculus II Notes", 'Integration techniques, polar coordinates, sequences, series, and vectors.', 'Lamar University', 'https://tutorial.math.lamar.edu/Classes/CalcII/CalcII.aspx'],
+          ['Open course + video', 'MIT Single Variable Calculus', 'College-level videos, notes, problem sets, and solutions for the full sequence.', 'MIT OpenCourseWare', 'https://ocw.mit.edu/courses/18-01sc-single-variable-calculus-fall-2010/'],
+          ['Video library', 'Integral Calculus', 'Short videos and guided practice covering core integral calculus topics.', 'Khan Academy', 'https://www.khanacademy.org/math/integral-calculus']
+        ]
+      },
+      {
+        name: 'Calculus III', theme: 'math', field: 'Mathematics · Multivariable',
+        aliases: ['calculus 3', 'calc 3', 'calc iii', 'multivariable calculus', 'vector calculus', 'math 143', 'math 2415'],
+        resources: [
+          ['Structured notes', "Paul's Calculus III Notes", 'Vectors, partial derivatives, multiple integrals, and vector calculus.', 'Lamar University', 'https://tutorial.math.lamar.edu/Classes/CalcIII/CalcIII.aspx'],
+          ['Open course + video', 'MIT Multivariable Calculus', 'Lecture videos, recitations, notes, problems, and exams at undergraduate level.', 'MIT OpenCourseWare', 'https://ocw.mit.edu/courses/18-02sc-multivariable-calculus-fall-2010/'],
+          ['Video library', 'Multivariable Calculus', 'Visual explanations and practice for derivatives and integrals in several variables.', 'Khan Academy', 'https://www.khanacademy.org/math/multivariable-calculus']
+        ]
+      },
+      {
+        name: 'Differential Equations', theme: 'math', field: 'Mathematics · Modeling change',
+        aliases: ['differential equations', 'diff eq', 'deq', 'ordinary differential equations', 'ode', 'math 244', 'math 2320'],
+        resources: [
+          ['Structured notes', "Paul's Differential Equations", 'First- and higher-order equations, Laplace transforms, systems, and series solutions.', 'Lamar University', 'https://tutorial.math.lamar.edu/Classes/DE/DE.aspx'],
+          ['Open course + video', 'MIT Differential Equations', 'An independent-study course with videos, notes, problems, and complete solutions.', 'MIT OpenCourseWare', 'https://ocw.mit.edu/courses/18-03sc-differential-equations-fall-2011/'],
+          ['Video series', 'Differential Equations Up Close', 'Gilbert Strang and Cleve Moler connect ODEs, linear algebra, and engineering applications.', 'MIT OpenCourseWare', 'https://ocw.mit.edu/courses/res-18-009-learn-differential-equations-up-close-with-gilbert-strang-and-cleve-moler-fall-2015/']
+        ]
+      },
+      {
+        name: 'Linear Algebra', theme: 'math', field: 'Mathematics · Systems & spaces',
+        aliases: ['linear algebra', 'matrix algebra', 'matrices', 'math 206', 'math 225'],
+        resources: [
+          ['Open textbook', 'Interactive Linear Algebra', 'A complete, browser-based textbook with examples and interactive figures.', 'Georgia Tech', 'https://textbooks.math.gatech.edu/ila/'],
+          ['Open course + video', 'MIT Linear Algebra', 'Gilbert Strang lectures, problem sets, exams, and solutions.', 'MIT OpenCourseWare', 'https://ocw.mit.edu/courses/18-06sc-linear-algebra-fall-2011/'],
+          ['YouTube series', 'Essence of Linear Algebra', 'Geometric intuition for vectors, transformations, determinants, and eigenvectors.', '3Blue1Brown', 'https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab']
+        ]
+      },
+      {
+        name: 'Engineering Statistics', theme: 'math', field: 'Mathematics · Data & uncertainty',
+        aliases: ['engineering statistics', 'engineering stats', 'statistics', 'stats', 'probability and statistics', 'probability', 'stat 312'],
+        resources: [
+          ['Reference handbook', 'Engineering Statistics Handbook', 'Detailed methods, examples, and case studies for engineering data analysis.', 'NIST / SEMATECH', 'https://www.itl.nist.gov/div898/handbook/'],
+          ['Open textbook', 'OpenIntro Statistics', 'A free textbook with data sets, labs, and supporting materials.', 'OpenIntro', 'https://www.openintro.org/book/os/'],
+          ['YouTube lessons', 'Statistics Fundamentals', 'Friendly visual explanations of distributions, tests, regression, and machine learning basics.', 'StatQuest', 'https://www.youtube.com/@statquest/playlists']
+        ]
+      },
+      {
+        name: 'Physics: Mechanics', theme: 'physics', field: 'Physics · Motion & forces',
+        aliases: ['physics mechanics', 'classical mechanics', 'mechanics physics', 'physics 1', 'physics i', 'phys 141', 'newtonian mechanics'],
+        resources: [
+          ['Open textbook', 'University Physics, Volume 1', 'Calculus-based mechanics, waves, and thermodynamics in a free web textbook.', 'OpenStax', 'https://openstax.org/details/books/university-physics-volume-1'],
+          ['Open course + video', 'MIT Classical Mechanics', 'Lecture videos, notes, problem sets, and exams for calculus-based mechanics.', 'MIT OpenCourseWare', 'https://ocw.mit.edu/courses/8-01sc-classical-mechanics-fall-2016/'],
+          ['Video lessons', 'College Physics 1', 'Worked examples and visual lessons covering motion, forces, energy, and momentum.', 'Flipping Physics', 'https://www.youtube.com/@FlippingPhysics/playlists']
+        ]
+      },
+      {
+        name: 'Physics: Electricity & Magnetism', theme: 'circuits', field: 'Physics · Fields & electromagnetism',
+        aliases: ['electricity and magnetism', 'electricity magnetism', 'e&m', 'e and m', 'physics 2', 'physics ii', 'phys 142', 'electromagnetism'],
+        resources: [
+          ['Open textbook', 'University Physics, Volume 2', 'Calculus-based electricity, magnetism, circuits, and electromagnetic waves.', 'OpenStax', 'https://openstax.org/details/books/university-physics-volume-2'],
+          ['Open course + video', 'MIT Electricity and Magnetism', 'Lecture videos, open textbook readings, problem sets, and exams.', 'MIT OpenCourseWare', 'https://ocw.mit.edu/courses/8-02-physics-ii-electricity-and-magnetism-spring-2019/'],
+          ['Video lessons', 'Electricity & Magnetism', 'Concept explanations and worked physics problems organized in playlists.', 'Flipping Physics', 'https://www.youtube.com/@FlippingPhysics/playlists']
+        ]
+      },
+      {
+        name: 'General Chemistry', theme: 'physics', field: 'Science · Matter & reactions',
+        aliases: ['general chemistry', 'gen chem', 'chemistry', 'chem 1', 'chem i', 'chem 101', 'chem 124'],
+        resources: [
+          ['Open textbook', 'Chemistry 2e', 'A free college textbook covering atoms, bonding, reactions, equilibrium, and more.', 'OpenStax', 'https://openstax.org/details/books/chemistry-2e'],
+          ['Open course + video', 'MIT Principles of Chemical Science', 'Undergraduate lectures, notes, practice, problem sets, and exams.', 'MIT OpenCourseWare', 'https://ocw.mit.edu/courses/5-111sc-principles-of-chemical-science-fall-2014/'],
+          ['Video course', 'College Chemistry', 'Video explanations and practice across a standard general chemistry sequence.', 'Khan Academy', 'https://www.khanacademy.org/science/chemistry']
+        ]
+      },
+      {
+        name: 'Intro to Programming', theme: 'code', field: 'Computing · Programming fundamentals',
+        aliases: ['intro to programming', 'introduction to programming', 'programming', 'python', 'intro to python', 'computer science 1', 'cs 101', 'cpe 101'],
+        resources: [
+          ['Official tutorial', 'The Python Tutorial', 'The language creators’ introduction to core Python concepts and tools.', 'Python.org', 'https://docs.python.org/3/tutorial/'],
+          ['Open course + video', 'CS50’s Introduction to Python', 'A free, project-based college course with lectures and assignments.', 'Harvard CS50', 'https://cs50.harvard.edu/python/'],
+          ['YouTube course', 'Python for Beginners', 'A full beginner course covering syntax, data structures, functions, and projects.', 'freeCodeCamp.org', 'https://www.youtube.com/watch?v=rfscVS0vtbw']
+        ]
+      },
+      {
+        name: 'Engineering Graphics / CAD', theme: 'structures', field: 'Design · Technical modeling',
+        aliases: ['engineering graphics', 'cad', 'computer aided design', 'engineering drawing', 'technical drawing', 'freecad', 'solidworks'],
+        resources: [
+          ['Structured guide', 'FreeCAD Getting Started', 'A guided introduction to a free, open-source parametric CAD tool.', 'FreeCAD', 'https://wiki.freecad.org/Getting_started'],
+          ['Open manual', 'A FreeCAD Manual', 'Project-based documentation for modeling, drafting, assemblies, and BIM workflows.', 'FreeCAD', 'https://www.freecad.org/manual/'],
+          ['Video tutorials', 'FreeCAD Video Tutorials', 'Official project videos, release demonstrations, and community learning sessions.', 'FreeCAD on YouTube', 'https://www.youtube.com/@FreeCADNews/videos']
+        ]
+      },
+      {
+        name: 'Statics', theme: 'structures', field: 'Mechanics · Bodies in equilibrium',
+        aliases: ['statics', 'engineering statics', 'mechanics statics', 'ce 204', 'me 211', 'engr 251'],
+        resources: [
+          ['Open textbook', 'Engineering Statics', 'An open, interactive textbook covering forces, moments, trusses, friction, and centroids.', 'EngineeringStatics.org', 'https://engineeringstatics.org/'],
+          ['Open course', 'MIT Engineering Mechanics I', 'Lecture notes, problem sets, and exams in statics and mechanics of solids.', 'MIT OpenCourseWare', 'https://ocw.mit.edu/courses/1-050-engineering-mechanics-i-fall-2007/'],
+          ['YouTube course', 'Statics Lessons', 'Worked engineering statics problems organized into a complete video sequence.', 'Jeff Hanson', 'https://www.youtube.com/@1234jhanson/playlists']
+        ]
+      },
+      {
+        name: 'Dynamics', theme: 'physics', field: 'Mechanics · Bodies in motion',
+        aliases: ['dynamics', 'engineering dynamics', 'mechanics dynamics', 'me 212', 'engr 252'],
+        resources: [
+          ['Open textbook', 'Mechanics Map: Dynamics', 'Written explanations, video lectures, worked examples, and homework problems for engineering dynamics.', 'Penn State', 'https://mechanicsmap.psu.edu/index.html'],
+          ['Open course + video', 'MIT Engineering Dynamics', 'Lecture videos, notes, problem sets, projects, and exams.', 'MIT OpenCourseWare', 'https://ocw.mit.edu/courses/2-003sc-engineering-dynamics-fall-2011/'],
+          ['YouTube course', 'Dynamics Lessons', 'Worked problems on kinematics, kinetics, energy, momentum, and rigid bodies.', 'Jeff Hanson', 'https://www.youtube.com/@1234jhanson/playlists']
+        ]
+      },
+      {
+        name: 'Mechanics of Materials', theme: 'structures', field: 'Mechanics · Stress & deformation',
+        aliases: ['mechanics of materials', 'strength of materials', 'solid mechanics', 'mechanics of solids', 'me 328', 'ce 207'],
+        resources: [
+          ['Open textbook', 'Mechanics of Materials', 'Open chapters on stress, strain, torsion, bending, deflection, and failure.', 'Engineering LibreTexts', 'https://eng.libretexts.org/Bookshelves/Materials_Science/Supplemental_Modules_(Materials_Science)/Mechanical_Properties'],
+          ['Open course', 'MIT Mechanics of Materials', 'Lecture notes, problems, and labs connecting material response to structural design.', 'MIT OpenCourseWare', 'https://ocw.mit.edu/courses/3-11-mechanics-of-materials-fall-1999/'],
+          ['YouTube course', 'Solids & Materials Lessons', 'Worked mechanics-of-materials problems with clear diagrams and calculations.', 'Jeff Hanson', 'https://www.youtube.com/@1234jhanson/playlists']
+        ]
+      },
+      {
+        name: 'Circuits', theme: 'circuits', field: 'Electrical · Signals & networks',
+        aliases: ['circuits', 'circuit analysis', 'circuits 1', 'electric circuits', 'electrical circuits', 'ee 201', 'ee 211'],
+        resources: [
+          ['Open textbook', 'Lessons in Electric Circuits', 'A free reference covering DC, AC, semiconductors, digital circuits, and experiments.', 'All About Circuits', 'https://www.allaboutcircuits.com/textbook/'],
+          ['Open course + video', 'MIT Circuits and Electronics', 'Video lectures, interactive exercises, labs, problem sets, and exams.', 'MIT OpenCourseWare', 'https://ocw.mit.edu/courses/6-002-circuits-and-electronics-spring-2007/'],
+          ['YouTube lessons', 'Electronics Fundamentals', 'Visual, experiment-driven lessons on voltage, current, components, and circuit analysis.', 'Afrotechmods', 'https://www.youtube.com/@Afrotechmods/playlists']
+        ]
+      },
+      {
+        name: 'Thermodynamics', theme: 'energy', field: 'Energy · Heat & work',
+        aliases: ['thermodynamics', 'thermo', 'engineering thermodynamics', 'thermo 1', 'me 302'],
+        resources: [
+          ['Open textbook', 'Introduction to Engineering Thermodynamics', 'A free web textbook on properties, energy, entropy, cycles, and engineering applications.', 'BCcampus Open Education', 'https://pressbooks.bccampus.ca/thermo1/'],
+          ['Open course', 'MIT Thermal-Fluids Engineering I', 'Lecture notes, problem sets, and exams covering thermodynamics and heat transfer.', 'MIT OpenCourseWare', 'https://ocw.mit.edu/courses/2-005-thermal-fluids-engineering-i-fall-2006/'],
+          ['Video library', 'Thermodynamics Screencasts', 'Short concept videos and worked examples made for engineering courses.', 'LearnChemE', 'https://learncheme.com/screencasts/thermodynamics/']
+        ]
+      },
+      {
+        name: 'Fluid Mechanics', theme: 'fluids', field: 'Fluids · Flow & pressure',
+        aliases: ['fluid mechanics', 'fluids', 'fluid dynamics', 'hydrodynamics', 'me 341', 'ce 321'],
+        resources: [
+          ['Open textbook', 'Fluid Mechanics', 'Open chapters on pressure, control volumes, pipe flow, and dimensional analysis.', 'Engineering LibreTexts', 'https://eng.libretexts.org/Bookshelves/Civil_Engineering/Fluid_Mechanics_%28Bar-Meir%29'],
+          ['Open course', 'MIT Fluid Dynamics', 'Lecture notes and problem sets on conservation laws and engineering flows.', 'MIT OpenCourseWare', 'https://ocw.mit.edu/courses/2-06-fluid-dynamics-spring-2013/'],
+          ['Video library', 'Fluid Mechanics Screencasts', 'Short engineering videos on momentum balances, Bernoulli, and flow behavior.', 'LearnChemE', 'https://learncheme.com/screencasts/fluid-mechanics/']
+        ]
+      }
+    ];
+
+    var form = document.getElementById('course-form');
+    var input = document.getElementById('course-input');
+    var datalist = document.getElementById('course-options');
+    var status = document.getElementById('search-status');
+    var results = document.getElementById('results');
+    var resultTitle = document.getElementById('result-title');
+    var resultMeta = document.getElementById('result-meta');
+    var themeTag = document.getElementById('theme-tag');
+    var grid = document.getElementById('resource-grid');
+    var empty = document.getElementById('empty');
+    var emptyMessage = document.getElementById('empty-message');
+    var courseList = document.getElementById('course-list');
+
+    function normalize(value) {
+      return value.toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, ' ').trim();
+    }
+
+    function score(course, query) {
+      var q = normalize(query);
+      if (!q) return 0;
+      var terms = [course.name].concat(course.aliases).map(normalize);
+      if (terms.indexOf(q) !== -1) return 100;
+      var exactStart = terms.some(function (term) { return term.indexOf(q) === 0 || q.indexOf(term) === 0; });
+      if (exactStart) return 70;
+      var qWords = q.split(' ');
+      var best = 0;
+      terms.forEach(function (term) {
+        var hits = qWords.filter(function (word) { return word.length > 1 && term.split(' ').indexOf(word) !== -1; }).length;
+        best = Math.max(best, hits / qWords.length * 50);
+      });
+      return best;
+    }
+
+    function findCourse(query) {
+      var ranked = courses.map(function (course) { return { course: course, score: score(course, query) }; })
+        .sort(function (a, b) { return b.score - a.score; });
+      return ranked[0] && ranked[0].score >= 50 ? ranked[0].course : null;
+    }
+
+    function make(tag, className, text) {
+      var element = document.createElement(tag);
+      if (className) element.className = className;
+      if (typeof text === 'string') element.textContent = text;
+      return element;
+    }
+
+    function renderCourse(course, announce) {
+      document.body.dataset.theme = course.theme;
+      resultTitle.textContent = course.name;
+      resultMeta.textContent = course.field + ' · College level · 3 free resources';
+      themeTag.textContent = course.theme === 'math' ? 'Mathematical systems' : course.field.split(' · ')[0] + ' backdrop';
+      grid.replaceChildren();
+      course.resources.forEach(function (resource) {
+        var card = make('a', 'resource-card');
+        card.href = resource[4];
+        card.target = '_blank';
+        card.rel = 'noopener noreferrer';
+        card.setAttribute('aria-label', resource[1] + ' from ' + resource[3] + ' (opens in a new tab)');
+        var top = make('div', 'card-top');
+        top.append(make('span', 'kind', resource[0]), make('span', 'out', '↗'));
+        card.append(top, make('h3', '', resource[1]), make('p', '', resource[2]), make('span', 'source', resource[3]));
+        grid.append(card);
+      });
+      empty.classList.remove('visible');
+      results.classList.add('visible');
+      if (announce !== false) status.textContent = 'Matched “' + input.value.trim() + '” to ' + course.name + '. Showing 3 free resources.';
+      results.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    }
+
+    function renderEmpty(query) {
+      document.body.dataset.theme = 'default';
+      results.classList.remove('visible');
+      emptyMessage.textContent = 'We could not match “' + query + '.” Choose a course below or try a common name such as “Calc 2,” “E&M,” or “Mechanics of Materials.”';
+      empty.classList.add('visible');
+      status.textContent = 'No course matched “' + query + '.” The supported course list is shown below.';
+      empty.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+    }
+
+    function runSearch(query) {
+      var clean = query.trim();
+      if (!clean) {
+        status.textContent = 'Enter a course name to search.';
+        input.focus();
+        return;
+      }
+      var match = findCourse(clean);
+      if (match) renderCourse(match);
+      else renderEmpty(clean);
+    }
+
+    courses.forEach(function (course) {
+      var option = document.createElement('option');
+      option.value = course.name;
+      datalist.append(option);
+      var button = make('button', 'course-button', course.name);
+      button.type = 'button';
+      button.addEventListener('click', function () { input.value = course.name; renderCourse(course); });
+      courseList.append(button);
+    });
+
+    form.addEventListener('submit', function (event) { event.preventDefault(); runSearch(input.value); });
+    document.querySelectorAll('[data-query]').forEach(function (button) {
+      button.addEventListener('click', function () { input.value = button.dataset.query; runSearch(input.value); });
+    });
+  })();
+  </script>
+</body>
 </html>
+
